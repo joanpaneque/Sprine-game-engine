@@ -2,7 +2,7 @@
 
 // External usage
 import { image, loadImage } from './graphics/image.js'
-import { createCanvas, background, cursor } from './control/canvas.js'
+import { createCanvas, background, cursor, canvas } from './control/canvas.js'
 import { keyDown, keys } from './control/keyboard.js'
 import { mouseX, mouseY } from './control/mouse.js'
 import { square } from './graphics/square.js'
@@ -12,6 +12,8 @@ import { Sprite } from './engine/sprite.js'
 import { renderSprites, touchingSprite } from './engine/sprite.js'
 import { chunkArray, isSubArray } from './utils/array.js'
 import { getFPS } from './control/loop.js'
+import { rnd } from './utils/random.js'
+import { wait } from './control/time.js'
 
 window.image = image
 window.loadImage = loadImage
@@ -31,6 +33,10 @@ window.touchingSprite = touchingSprite
 window.cursor = cursor
 window.getFPS = getFPS
 window.isSubArray = isSubArray
+window.rnd = rnd
+window.canvas = canvas
+window.wait = wait
+
 
 // API usage
 import { loadLoop } from './control/loop.js'

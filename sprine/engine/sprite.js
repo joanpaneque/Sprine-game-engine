@@ -7,6 +7,7 @@ export class Sprite {
     constructor(x = 0, y = 0) {
         this.x = x
         this.y = y
+        this.pointTowards(90)
         this.image = undefined
         this.imageObject = image('sprine/img/default.png', this.x, this.y)
         this.collisionCache = []
@@ -27,50 +28,22 @@ export class Sprite {
         this.goto(this.x, this.y + y)
     }
 
+    getDirection() {
+        return (this.direction - 90) / -1
+    }
+
+    pointTowards(angle) {
+        this.direction = (angle - 90) / -1
+    }
+
     goto(x, y) {
         this.x = x
         this.y = y
         this.collisionCache = []
     }
 
-    touchingSprite(sprite) {
-
-        let thisArray = this.collisionCache
-        let spriteArray = sprite.collisionCache
-
-        let largestArray = thisArray.length > spriteArray.length ? thisArray : spriteArray
-        let smallestArray = thisArray.length < spriteArray.length ? thisArray : spriteArray
-
-        let largestArray1 = []
-        let largestArray2 = []
-        let largestArray3 = []
-        let largestArray4 = []
-
-        for (let i = 0; i < largestArray.length; i++) {
-
-        }
-
-
-
-        // let touching = false
-
-        // let thisArray = this.collisionCache
-        // let spriteArray = sprite.collisionCache
-
-        // // get the largest and the smallest array
-        // let largestArray = thisArray.length > spriteArray.length ? thisArray : spriteArray
-        // let smallestArray = thisArray.length < spriteArray.length ? thisArray : spriteArray
-
-        // smallestArray = smallestArray.join('_')
-        // for (let i = 0; i < largestArray.length; i++) {
-        //     if (smallestArray.includes(largestArray[i]) && largestArray[i] !== false) {
-        //         touching = true
-        //         return touching
-        //     }
-        // }
-
-        // return touching
-
+    moveSteps(steps) {
+        this.goto(this.x + (Math.cos(this.direction * Math.PI / 180) * steps), this.y + (Math.sin(this.direction * Math.PI / 180) * steps))
     }
 }
 

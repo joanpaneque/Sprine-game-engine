@@ -1,4 +1,5 @@
 import { renderSprites } from "../engine/sprite.js"
+import { waiting } from "./time.js"
 
 var lastCalledTime
 var counter = 0
@@ -29,8 +30,13 @@ export function loadLoop() {
         counter++
     }
     window.deltaTime = deltaTime * 150
-    loop()
-    renderSprites()
+
+    if (!waiting) {
+        loop()
+        renderSprites()
+    }
+
+
     window.requestAnimationFrame(loadLoop)
 }
 

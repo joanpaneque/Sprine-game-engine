@@ -1,69 +1,71 @@
 function preload() {
-    loadImage('images/icon.png')
-    loadImage('images/5pixels.png')
-    loadImage('images/crosshair.png')
+    loadImage('images/player.png')
+    loadImage('images/ball.png')
 }
 
 
 
 function setup() {
-    createCanvas(window.innerWidth, window.innerHeight)
+    createCanvas(800, 600)
+    player1 = new Sprite(-370, 0)
+    player2 = new Sprite(370, 0)
+    ball = new Sprite(0, 0)
+    player1.setimage('images/player.png')
+    player2.setimage('images/player.png')
+    ball.setimage('images/ball.png')
 
-    sprite = new Sprite(0, 0)
-    sprite.setimage('images/crosshair.png')
-    sprite2 = new Sprite(0, 0)
-    touchingSprite(sprite)
-    touchingSprite(sprite2)
 
-
-let chunkMatrix = (matrix, width) => {
-    let chunk = chunkArray(matrix, width)
-    if (width / 2 % 1 != 0) return console.error('Cannot chunk an array by odd numbers')
-    return chunk
-}
-/*
-*  [   0   1   2   3
-*  0 [[1],[0],[2],[0]],
-*  1 [[0],[1],[0],[2]],
-*  2 [[3],[0],[4],[0]],
-*  3 [[0],[3],[0],[4]]
-*                     ]
-*
-*    0,0 - 0,1 | 0,2 - 0,3
-*    1,0 - 1,1 | 1,2 - 1,3
-*    ----------------------
-*    2,0 - 2,1 | 2,2 - 2,3
-*    3,0 - 3,1 | 3,2 - 3,3
-*/
-console.log(chunkMatrix([[1],[0],[2],[0],[0],[1],[0],[2],[3],[0],[4],[0],[0],[3],[0],[4]], 4))
-    
 }
 
 function loop() {
     background(50)
+    document.getElementById('output').innerHTML = getFPS()
 
-    if (touchingSprite(sprite)) {
-        cursor('pointer')
-    } else {
-        cursor('default')
+    if (keyDown('w')) {
+        player1.changeY(3 * deltaTime)
+        if (player1.y > 175) {
+            player1.changeY(-3 * deltaTime)
+        }
     }
 
-    if (keyDown('w')) sprite.changeY(1 * deltaTime)
-    if (keyDown('a')) sprite.changeX(-1 * deltaTime)
-    if (keyDown('s')) sprite.changeY(-1 * deltaTime)
-    if (keyDown('d')) sprite.changeX(1 * deltaTime)
-    touchingSprite(sprite)
+    if (keyDown('s')) {
+        player1.changeY(-3 * deltaTime)
+        if (player1.y < -175) {
+            player1.changeY(3 * deltaTime)
+        }
+    }
 
-    // Do the same for sprite2 but with arrow keys
-    if (keyDown('ArrowUp')) sprite2.changeY(5 * deltaTime)
-    if (keyDown('ArrowLeft')) sprite2.changeX(-5 * deltaTime)
-    if (keyDown('ArrowDown')) sprite2.changeY(-5 * deltaTime)
-    if (keyDown('ArrowRight')) sprite2.changeX(5 * deltaTime)
+    if (keyDown('ArrowUp')) {
+        player2.changeY(3 * deltaTime)
+        if (player2.y > 175) {
+            player2.changeY(-3 * deltaTime)
+        }
+    }
+    
+    if (keyDown('ArrowDown')) {
+        player2.changeY(-3 * deltaTime)
+        if (player2.y < -175) {
+            player2.changeY(3 * deltaTime)
+        }
+    }
 
-//    console.time('start')
-console.log(sprite.touchingSprite(sprite2))
-//    console.timeEnd('start')
+    ball.moveSteps(5)
 
-    document.getElementById('output').innerHTML = getFPS()
+    if ((ball.x > 330 && (ball.y < player2.y + 125 && ball.y > player2.y - 125)) || (ball.x < -330 && (ball.y < player1.y + 125 && ball.y > player1.y - 125))) {
+        if (ball.x > 0) {
+            ball.pointTowards(rnd(225, 315))
+        } else {
+            ball.pointTowards(rnd(45, 135))
+        }
+    }
+
+    if (ball.y > canvas.height / 2 - 25 || ball.y < canvas.height / -2 + 25) {
+        ball.pointTowards(180 - ball.getDirection())
+    }
+
+    if (ball.x > canvas.width / 2 || ball.x < canvas.width / -2) {
+        ball.goto(0, 0)
+        wait(1)
+    }
 
 }
