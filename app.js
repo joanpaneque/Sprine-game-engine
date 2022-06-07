@@ -1,12 +1,17 @@
+// Use this function to preload resources
 function preload() {
+<<<<<<< HEAD
     loadImage('images/player.png')
     loadImage('images/ball.png')
+=======
+
+>>>>>>> 114da947bb74e2a50e7edb82817c280332902d82
 }
 
-
-
+// This function executes when all resources are loaded
 function setup() {
     createCanvas(800, 600)
+<<<<<<< HEAD
     player1 = new Sprite(-370, 0)
     player2 = new Sprite(370, 0)
     ball = new Sprite(0, 0)
@@ -15,10 +20,14 @@ function setup() {
     ball.setimage('images/ball.png')
 
 
+=======
+>>>>>>> 114da947bb74e2a50e7edb82817c280332902d82
 }
 
+// Use this function to draw graphics
 function loop() {
     background(50)
+<<<<<<< HEAD
     document.getElementById('output').innerHTML = getFPS()
 
     if (keyDown('w')) {
@@ -68,4 +77,6 @@ function loop() {
         wait(1)
     }
 
+=======
+>>>>>>> 114da947bb74e2a50e7edb82817c280332902d82
 }
