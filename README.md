@@ -31,7 +31,7 @@ Sprine.js is __really easy__ to install:
 
 1. Download the sprine.js library
 2. Put the folder 'Sprine' where your index.html file is
-3. Add the next line in the "<head>" tag of your index.html file
+3. Add the next line in the head tag of your index.html file
 
 ```html
 <script type="module" src="sprine/sprine.js"></script>
