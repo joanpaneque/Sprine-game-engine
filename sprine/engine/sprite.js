@@ -1,5 +1,7 @@
+import { canvas } from "../control/canvas.js"
 import { image, getPixels } from "../graphics/image.js"
 import { chunkArray, arraysEqual, isSubArray } from "../utils/array.js"
+import { isBetween, deCenterX, deCenterY } from "../utils/coordinates.js"
 
 var sprites = []
 
@@ -11,12 +13,15 @@ export class Sprite {
         this.image = undefined
         this.imageObject = image('sprine/img/default.png', this.x, this.y)
         this.collisionCache = []
+        generateCollisions(this)
         sprites.push(this)
     }
 
     setimage(src) {
         this.image = src
+        this.imageObject = image(src, this.x, this.y)
         this.collisionCache = []
+        generateCollisions(this)
         renderSprites()
     }
 
@@ -39,41 +44,56 @@ export class Sprite {
     goto(x, y) {
         this.x = x
         this.y = y
-        this.collisionCache = []
     }
 
     moveSteps(steps) {
         this.goto(this.x + (Math.cos(this.direction * Math.PI / 180) * steps), this.y + (Math.sin(this.direction * Math.PI / 180) * steps))
     }
+
+    touchingEdge() {
+        generateCollisions(this)
+        let chunkedCollisions = chunkArray(this.collisionCache, this.imageObject.width)
+    }
+}
+
+function generateCollisions(sprite) {
+
+    let spritePixels = getPixels(sprite.imageObject)
+    spritePixels = spritePixels.map(pixel => pixel[3] === 0 ? false : true)
+
+    spritePixels = chunkArray(spritePixels, sprite.imageObject.width)
+    for (let row = 0; row < spritePixels.length; row++) {
+        for (let col = 0; col < spritePixels[row].length; col++) {
+            if (spritePixels[row][col]) {
+                spritePixels[row][col] = [parseInt(sprite.x - sprite.imageObject.width / 2 + col), parseInt(sprite.y + sprite.imageObject.height / 2 - row)]
+
+            }
+            sprite.collisionCache.push(spritePixels[row][col])
+        }
+    }
+    sprite.collisionCache = chunkArray(sprite.collisionCache, sprite.imageObject.width)
+
 }
 
 export function touchingSprite(sprite) {
 
-    let touching = false
-
-    if (sprite.collisionCache.length == 0) {
-        let spritePixels = getPixels(sprite.imageObject)
-        spritePixels = spritePixels.map(pixel => pixel[3] === 0 ? false : true)
-
-        spritePixels = chunkArray(spritePixels, sprite.imageObject.width)
-        for (let row = 0; row < spritePixels.length; row++) {
-            for (let col = 0; col < spritePixels[row].length; col++) {
-                if (spritePixels[row][col]) {
-                    spritePixels[row][col] = [parseInt(sprite.x - sprite.imageObject.width / 2 + col), parseInt(sprite.y + sprite.imageObject.height / 2 - row)]
-                    
-                }
-                sprite.collisionCache.push(spritePixels[row][col])
-            }
-        }
+    if (!isBetween(window.mouseX, window.mouseY, sprite.x - sprite.imageObject.width / 2, sprite.y + sprite.imageObject.height / 2, sprite.x + sprite.imageObject.width / 2, sprite.y - sprite.imageObject.height / 2)) {
+        return false
     }
+    if (sprite.collisionCache.length === 0) generateCollisions(sprite)
 
-    sprite.collisionCache.forEach(pixel => {
-        if (arraysEqual(pixel, [window.mouseX, window.mouseY])) {
-            touching = true
-            return
-        }
-    })
-    return touching
+
+    // Get the mouse coordinates relative to the sprite
+    let mouseY = deCenterY(window.mouseY) - deCenterY(sprite.y + sprite.imageObject.height / 2)
+    let mouseX = deCenterX(window.mouseX) - deCenterX(sprite.x - sprite.imageObject.width / 2)
+
+
+    try {
+        return typeof sprite.collisionCache[Math.round(mouseY)][Math.round(mouseX)] == 'object'
+      } catch (error) {
+        return false
+      }
+
 }
 
 export function renderSprites() {
