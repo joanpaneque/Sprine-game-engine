@@ -43,4 +43,3 @@ export function getPixels(image) {
     // Return the image data.
     return chunkArray(imagedata, 4)
 }
-
