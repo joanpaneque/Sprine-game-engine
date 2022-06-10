@@ -38,6 +38,7 @@ Sprine.js is __really easy__ to install:
 ```
 
 ## Documentation
-Net yet... Please come back later
+See the [repository wiki], there you can check the library documentation.
 
   [Joan Paneque]: <https://github.com/joanpaneque>
+  [repository wiki]: <https://github.com/joanpaneque/Sprine-game-engine/wiki>
